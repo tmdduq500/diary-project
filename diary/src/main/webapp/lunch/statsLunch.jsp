@@ -96,7 +96,8 @@
 		
 		table {
 			border-collapse: collapse;
-			width: 800px;
+			width: 500px;
+			height: 400px;
 			margin: 0rem auto;
 			box-shadow: 4px 4px 10px 0 rgba(0, 0, 0, 0.1);
 			background-color: white;
@@ -112,6 +113,7 @@
 		
 		th {
 		  background-color: rgba(92, 138, 153, 0.5);
+		  height: 20px;
 		  color: #000000;
 		}
 				
@@ -132,7 +134,7 @@
 	<div class="row" style="min-height: 100vh;">
 			<div class="col"></div>
 			
-			<div class="col-6 mt-5 border border-light-subtle shadow p-2 rounded-2" style="background-color: rgba(248, 249, 250, 0.7); height: 500px; width: 800px;">
+			<div class="col-6 mt-5 border border-light-subtle shadow p-2 rounded-2" style="background-color: rgba(248, 249, 250, 0.7); height: 600px; width: 800px;">
 
 				<div class="row">
 					
@@ -159,8 +161,8 @@
 						</div>
 					</div>
 					
-					<div class="col-4">
-						<h1>statsLunch</h1>
+					<div class="col-4" style="text-align: center;">
+						<h1 style=" font-size: 55px;">점심 투표</h1>
 					</div>
 	
 					<div class="col-4" style="text-align: right;">
@@ -187,7 +189,7 @@
 							전체 투표수 : <%=(int)totalCnt%>
 						</div>
 						
-						<table style="background-color: rgba(255, 255, 255, 0); width: 400px; margin-top: 50px;">
+						<table style="background-color: rgba(255, 255, 255, 0); margin-top: 20px;">
 							<tr>
 								<th colspan="5">투표결과</th>
 							</tr>
@@ -220,9 +222,9 @@
 												
 									while(getMenuStatRs.next()) {
 								%>
-										<td>
+										<th>
 											<%=getMenuStatRs.getString("menu")%>
-										</td>
+										</th>
 								<%		
 									}
 								%>
