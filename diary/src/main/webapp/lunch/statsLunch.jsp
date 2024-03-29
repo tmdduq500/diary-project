@@ -1,7 +1,8 @@
-<%@page import="java.net.URLEncoder"%>
-<%@page import="java.sql.*"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.sql.*" %>
+<%@ page import="java.net.*" %>
 <%
+
 // 	/* 로그인(인증) 분기 */
 // 	// [DB] diary.login.my_session -> 'OFF'[로그아웃이 되어있을 경우] -> redirect("loginForm.jsp")
 	
@@ -37,8 +38,8 @@
 // 		return ;	// 코드의 진행을 끝 낼때 사용
 // 	}
 %>
-<%
-	
+
+<%	
 	//0. 로그인(인증) 분기
 	String loginMember = (String)(session.getAttribute("loginMember"));
 	if(loginMember == null) {
@@ -46,36 +47,74 @@
 		response.sendRedirect("/diary/login/loginForm.jsp?errMsg="+errMsg);
 		return;
 	}
-
+	
 	//DB 연결 및 초기화
 	Class.forName("org.mariadb.jdbc.Driver");
 	Connection conn = null;
 	conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3307/diary", "root", "java1234");
+	/*
+		SELECT menu,COUNT(*)
+		FROM lunch
+		GROUP BY menu
 
-	// 요청 값 
-	String lunchDate = request.getParameter("lunchDate");
-	String menu = request.getParameter("menu");
-
-	if(lunchDate == null) {
-		response.sendRedirect("/diary/diaryListOfMonth.jsp");
-	}
-	
-	// lunchDate 요청 값 확인
-	System.out.println("deleteLunchForm - lunchDate = " + lunchDate);
-		
+	*/
+	String getMenuStatSql = "select menu, count(*) cnt from lunch group by menu";
+	PreparedStatement getMenuStatStmt = null;
+	ResultSet getMenuStatRs = null;
+	getMenuStatStmt = conn.prepareStatement(getMenuStatSql);
+	getMenuStatRs = getMenuStatStmt.executeQuery();
 %>
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>title</title>
+	<title>statsLunch</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Orbit&display=swap" rel="stylesheet">
 	<style>
-	
+		a:link {
+			color: black;
+			text-decoration: none;
+		}
+		
+		a:visited {
+			color: #003541;
+			text-decoration: none;
+		}
+		
+		a:hover {
+			color: #3162C7;
+			text-decoration: none;
+		}
+		
+		a:active {
+			text-decoration: none;
+		}
+		
+		table {
+			border-collapse: collapse;
+			width: 800px;
+			margin: 0rem auto;
+			box-shadow: 4px 4px 10px 0 rgba(0, 0, 0, 0.1);
+			background-color: white;
+		}
+		
+		th, td {
+		  padding: 10px;
+		  text-align: left;
+		  border-bottom: 1px solid #ddd;
+		  text-align: center;
+		  color: #000000;
+		}
+		
+		th {
+		  background-color: rgba(92, 138, 153, 0.5);
+		  color: #000000;
+		}
+				
 		body {
 			background-image: url('/diary/img/img5.jpg');
 			background-size: 100%;
@@ -86,26 +125,17 @@
 			font-style: normal;
 			min-height: 100vh;
 		}
-		
-		.button {
-			color: black;
-		}
 	</style>
 </head>
 <body>
-	<div>
 		
-	</div>
-	
 	<div class="row" style="min-height: 100vh;">
 			<div class="col"></div>
 			
-			<div class="col-6 mt-5 border border-light-subtle shadow p-2 rounded-2" style="background-color: rgba(248, 249, 250, 0.7); height: 450px; width: 800px;">
-	
-	
+			<div class="col-6 mt-5 border border-light-subtle shadow p-2 rounded-2" style="background-color: rgba(248, 249, 250, 0.7); height: 500px; width: 800px;">
+
 				<div class="row">
 					
-
 					<div class="col-4">
 						<div style="display: flex;">
 							<form action="/diary/diaryListOfMonth.jsp">
@@ -128,16 +158,13 @@
 							</form>
 						</div>
 					</div>
-
 					
 					<div class="col-4">
-						<h1 style="text-align: center; font-size: 55px;">점심 메뉴</h1>
+						<h1>statsLunch</h1>
 					</div>
 	
 					<div class="col-4" style="text-align: right;">
-						<form action="/diary/lunch/lunchOne.jsp?lunchDate=<%=lunchDate%>" method="post">
-							<button type="submit" class="btn-close" aria-label="Close" style="margin: 15px;"></button>
-						</form>
+
 					</div>
 					
 				</div>
@@ -147,38 +174,68 @@
 				<div>
 				
 					<div style="text-align: center;">
-					 	<form action="/diary/lunch/deleteLunchAction.jsp" method="post" style="margin-top: 50px;">
-					 		<div>
-					 			<%=lunchDate %>일 투표한 음식은 <%=menu %>입니다.
-					 		</div>
-					 		
-							<div style="margin-top: 30px;">
-								삭제하시려면 비밀번호를 입력해주세요.
-							</div>
-							
-							<div style="margin-top: 30px;">
-								<input type="hidden" name="lunchDate" value="<%=lunchDate%>">
-								<input type="hidden" name="menu" value="<%=menu%>">
-								pw : 
-								<input type="password" name="pw">
-							</div>
-							
-							<div>
-								<button class="btn btn-outline-secondary" type="submit" style="margin-top: 30px;">입력 완료</button>
-							</div>
-							
-						</form>
-					</div>
 					
-					<div style="text-align: center;">
-
-
+						<%
+							double maxHeight = 500;
+							double totalCnt = 0; //
+							while(getMenuStatRs.next()) {
+								totalCnt = totalCnt + getMenuStatRs.getInt("cnt");
+							}
+						%>
+						
+						<div>
+							전체 투표수 : <%=(int)totalCnt%>
+						</div>
+						
+						<table style="background-color: rgba(255, 255, 255, 0); width: 400px; margin-top: 50px;">
+							<tr>
+								<th colspan="5">투표결과</th>
+							</tr>
+														
+							<tr>
+								<%	
+									String[] color = {"#FF0000", "#FF5E00", "#FFE400", "#1DDB16", "#0054FF"};
+									int colorIndex = 0;
+									
+									getMenuStatRs.beforeFirst();
+									while(getMenuStatRs.next()) {
+										int height = (int)(maxHeight * (getMenuStatRs.getInt("cnt")/totalCnt));
+								%>
+										<td style="vertical-align: bottom;">
+											<div style="height: <%=height%>px; 
+														background-color:<%=color[colorIndex]%>;
+														text-align: center">
+												<%=getMenuStatRs.getInt("cnt")%>
+											</div>
+										</td>
+								<%		
+										colorIndex++;
+									}
+								%>
+							</tr>
+							<tr>
+								<%
+									// 커서의 위치를 처음 행으로
+									getMenuStatRs.beforeFirst();
+												
+									while(getMenuStatRs.next()) {
+								%>
+										<td>
+											<%=getMenuStatRs.getString("menu")%>
+										</td>
+								<%		
+									}
+								%>
+							</tr>
+						</table>
 					</div>
 					
 				</div>
 					
 			</div>
+			
 			<div class="col"></div>
+			
 		</div>
 	
 </body>
