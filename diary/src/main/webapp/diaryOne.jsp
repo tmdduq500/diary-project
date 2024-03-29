@@ -72,6 +72,17 @@
 	getDiaryRs = getDiaryStmt.executeQuery();
 	
 %>
+<%
+	// 댓글 출력
+	String getCommnentSql = "SELECT comment_no commentNo, memo, LEFT(create_date, 16) createDate FROM COMMENT WHERE diary_date = ?";
+	PreparedStatement getCommnentStmt = null;
+	ResultSet getCommnentRs = null;
+	
+	getCommnentStmt = conn.prepareStatement(getCommnentSql);
+	getCommnentStmt.setString(1, diaryDate);
+	getCommnentRs = getCommnentStmt.executeQuery();
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -88,11 +99,6 @@
 			text-decoration: none;
 		}
 		
-		a:visited {
-			color: #003541;
-			text-decoration: none;
-		}
-		
 		a:hover {
 			color: #3162C7;
 			text-decoration: none;
@@ -101,11 +107,11 @@
 		a:active {
 			text-decoration: none;
 		}
-	
+				
 		body {
 			background-image: url('/diary/img/img5.jpg');
+			background-repeat: repeat-y;
 			background-size: 100%;
-			background-repeat: no-repeat; 
 			background-position: center;
 			font-family: "Orbit", sans-serif;
 			font-weight: 300;
@@ -143,7 +149,7 @@
 		  cursor: pointer;
 		  color: 
 		}
-				
+
 	</style>
 </head>
 <body>
@@ -151,7 +157,7 @@
 	<div class="row" style="min-height: 100vh;">
 		<div class="col"></div>
 		
-		<div class="col-6 mt-5 border border-light-subtle shadow p-2 rounded-2" style="background-color: rgba(248, 249, 250, 0.7); height: 800px;">
+		<div class="col-6 mt-5 border border-light-subtle shadow p-2 rounded-2" style="background-color: rgba(248, 249, 250, 0.7);">
 
 			<div>
 				<%
@@ -165,25 +171,34 @@
 
 			<div class="row">
 				
-				<div class="col-3" style="display: flex;">
-					<form action="/diary/diaryListOfMonth.jsp">
-						<button type="submit" class="btn btn-outline-secondary" style="color: black; margin-right: 10px;">
-							다이어리
-						</button>
-					</form>
-					
-					<form action="/diary/diaryList.jsp">
-						<button type="submit" class="btn btn-outline-secondary" style="color: black;">
-							일기 목록
-						</button>
-					</form>
+				<div class="col-4">
+						<div style="display: flex;">
+							<form action="/diary/diaryListOfMonth.jsp">
+								<button type="submit" class="btn btn-outline-secondary" style="color: black; margin-right: 10px; padding: 5 10px; width: 115px;">
+									&#128214;다이어리
+								</button>
+							</form>
+							
+							<form action="/diary/diaryList.jsp">
+								<button type="submit" class="btn btn-outline-secondary" style="color: black;">
+									&#128214;일기 목록
+								</button>
+							</form>
+						</div>
+						<div style="display: flex;">					
+							<form action="/diary/lunch/statsLunch.jsp">
+								<button type="submit" class="btn btn-outline-secondary" style="color: black;">
+									&#127835;점심 통계
+								</button>
+							</form>
+						</div>
+					</div>
+				
+				<div class="col-4">
+					<h1 style="text-align: center; font-size: 55px;">일기장</h1>
 				</div>
 				
-				<div class="col-6">
-					<h1 style="text-align: center; font-size: 60px;">일기</h1>
-				</div>
-				
-				<div class="col-3" style="text-align: right;">
+				<div class="col-4" style="text-align: right;">
 					<form action="/diary/login/logoutAction.jsp" method="post">
 						<button class="btn btn-outline-secondary" type="submit">로그아웃</button>
 					</form>
@@ -234,6 +249,51 @@
 						일기 삭제하기
 					</button>
 				</form>
+			</div>
+			
+			<!-- 댓글 -->
+			<div style="margin: 0 50px;">
+				<!-- 댓글 리스트 -->
+				
+				<div>
+					<h3>댓글</h3>
+					<%
+						while(getCommnentRs.next()) {
+					%>
+							<div>
+								<div style="font-size: 18px;">
+								
+									<%=getCommnentRs.getString("memo")%>
+									<a href="/diary/comment/deleteCommentAction.jsp?diaryDate=<%=diaryDate%>&commentNo=<%=getCommnentRs.getInt("commentNo") %>" style="float: right; font-size: 15px;">
+										삭제
+									</a>
+									<div style="font-size: 12px; color: gray; text-align: right;">
+										<%=getCommnentRs.getString("createdate")%>
+									</div>
+									
+								</div>
+							</div>
+							<hr>
+					<%
+						}
+					%>
+				</div>
+				
+				<!-- 댓글 추가 폼 -->
+				<div>
+					<form action="/diary/comment/addCommentAction.jsp">
+					
+						<input type="hidden" name="diaryDate" value="<%=diaryDate%>">
+						<div class="form-floating">
+							<textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" name="memo" style="height: 100px; margin-top: 10px; background-color: rgba(255,255,255,0.6);"></textarea>
+							<label for="floatingTextarea">댓글 입력하기</label>
+						</div>
+						
+						<button type="submit" class="btn btn-light shadow-sm rounded" style="border:1px solid #C2C7CA; color: #000000; background-color: #A2BAC2; float: right; margin-top: 5px;">
+							댓글 입력
+						</button>
+					</form>
+				</div>
 			</div>
 			
 
