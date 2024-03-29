@@ -351,20 +351,20 @@
 							}
 						} else if(i - startBlank <= 0) {
 				%>
-							<div class="cell rounded-1" style="color: gray;">
+							<div class="cell rounded-1" style="color: gray; text-align: left;">
 								<%=i - startBlank + beforeMonthLastDay%>
 							</div>
 				<%
 						} else {
 							if(i % 7 == 1) {
 				%>
-								<div class="cell rounded-1"  style="clear: both;">
+								<div class="cell rounded-1"  style="clear: both; text-align: left;">
 									<%=i - startBlank - lastDate%>
 								</div>
 				<%
 							} else {
 				%>
-								<div class="cell rounded-1" style="color: gray;">
+								<div class="cell rounded-1" style="color: gray; text-align: left;">
 									<%=i - startBlank - lastDate%>
 								</div>
 				<%
