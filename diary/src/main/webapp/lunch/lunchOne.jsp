@@ -150,10 +150,16 @@
 								</button>
 							</form>
 						</div>
-						<div style="display: flex;">					
+						<div style="display: flex;">
+							
 							<form action="/diary/lunch/statsLunch.jsp">
-								<button type="submit" class="btn btn-outline-secondary" style="color: black;">
+								<button type="submit" class="btn btn-outline-secondary" style="color: black; margin-right: 10px;">
 									&#127835;점심 통계
+								</button>
+							</form>
+							<form action="/diary/lunch/lunchAddForm.jsp">
+								<button type="submit" class="btn btn-outline-secondary" style="color: black;">
+									&#127835;점심 투표
 								</button>
 							</form>
 						</div>
@@ -207,87 +213,7 @@
 		</div>
 
 <%
-	} else {
-		// 투표 안했다면
-%>
-		<div class="row" style="min-height: 100vh;">
-			<div class="col"></div>
-			
-			<div class="col-6 mt-5 border border-light-subtle shadow p-2 rounded-2" style="background-color: rgba(248, 249, 250, 0.7); height: 450px; width: 800px;">
-
-				<div class="row">
-					
-					<div class="col-4">
-						<div style="display: flex;">
-							<form action="/diary/diaryListOfMonth.jsp">
-								<button type="submit" class="btn btn-outline-secondary" style="color: black; margin-right: 10px; padding: 5 10px; width: 115px;">
-									&#128214;다이어리
-								</button>
-							</form>
-							
-							<form action="/diary/diaryList.jsp">
-								<button type="submit" class="btn btn-outline-secondary" style="color: black;">
-									&#128214;일기 목록
-								</button>
-							</form>
-						</div>
-						<div style="display: flex;">					
-							<form action="/diary/lunch/statsLunch.jsp">
-								<button type="submit" class="btn btn-outline-secondary" style="color: black;">
-									&#127835;점심 통계
-								</button>
-							</form>
-						</div>
-					</div>
-					
-					<div class="col-4">
-						<h1 style="text-align: center; font-size: 55px;">점심 메뉴</h1>
-					</div>
-	
-					<div class="col-4" style="text-align: right;">
-						<form action="/diary/diaryListOfMonth.jsp">
-							<button type="submit" class="btn-close" aria-label="Close" style="margin: 15px;"></button>
-						</form>
-					</div>
-					
-				</div>
-	
-				<hr>
-				
-				<div>
-				
-					<div style="text-align: center;">
-			
-						<form action="/diary/lunch/lunchAddAction.jsp" method="post">
-							<input type="text" name="lunchDate" value="<%=lunchDate%>" readonly="readonly" style="width: 150px; text-align:center; background-color: rgba(0,0,0,0); margin-top: 40px;">
-							
-							<div style="margin-top: 30px;">
-								메뉴를 투표해주세요
-							</div>
-							
-							<div style="margin-top: 30px;">
-								<input type="radio" name="menu" value="한식">한식
-								<input type="radio" name="menu" value="중식">중식
-								<input type="radio" name="menu" value="일식">일식
-								<input type="radio" name="menu" value="양식">양식
-								<input type="radio" name="menu" value="기타">기타
-							</div>
-							
-							<div>
-								<button class="btn btn-outline-secondary" type="submit" style="margin-top: 30px;">투표 하기</button>
-							</div>
-						</form>
-
-					</div>
-					
-				</div>
-					
-			</div>
-			<div class="col"></div>
-		</div>
-
-<%
-	}
+	} 
 %>
 </body>
 </html>

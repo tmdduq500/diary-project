@@ -64,11 +64,11 @@
 	String targetYear = request.getParameter("targetYear");
 	String targetMonth = request.getParameter("targetMonth");
 	
-	System.out.println("targetYear = " + targetYear);
-	System.out.println("targetMonth = " + targetMonth);
+	System.out.println("diaryListOfMonth - targetYear = " + targetYear);
+	System.out.println("diaryListOfMonth - targetMonth = " + targetMonth);
 	
 	Calendar target = Calendar.getInstance();
-	
+		
 	if(targetYear != null && targetMonth != null) {
 		target.set(Calendar.YEAR, Integer.parseInt(targetYear));
 		target.set(Calendar.MONTH, Integer.parseInt(targetMonth));
@@ -78,11 +78,14 @@
 	int titleYear = target.get(Calendar.YEAR);
 	int titleMonth = target.get(Calendar.MONTH);
 	
+	System.out.println("diaryListOfMonth - titleYear = " + titleYear);
+	System.out.println("diaryListOfMonth - titleMonth = " + titleMonth);
+	
 	// 달력 1일 시작 전 공백 개수 -> 1일의 요일이 필요 -> target의 날짜를 1일로 변경
 	target.set(Calendar.DATE, 1);
 	int firstDateNum = target.get(Calendar.DAY_OF_WEEK);	//1일의 요일 (일 : 1 / 월 : 2 / ... / 토 : 7)
 	
-	System.out.println("firstDateNum = " + firstDateNum);
+	System.out.println("diaryListOfMonth - firstDateNum = " + firstDateNum);
 	
 	int startBlank = firstDateNum - 1;	// 1일 시작 전 공백 개수 Ex) 1일이 일요일 -> 0개 / 1일이 월요일 -> 1개 / .... / 1일이 토요일 -> 6개
 	System.out.println("startBlank = " + startBlank);
@@ -107,6 +110,14 @@
 	System.out.println(getDiaryListStmt);
 	
 	getDiaryListRs = getDiaryListStmt.executeQuery();
+%>
+
+<%
+	// 점심 투표했는지 표시하기
+	String getLunchSql = "SELECT menu FROM lunch WHERE lunch_date = ?";
+	PreparedStatement getLunchStmt = null;
+	ResultSet getLunchRs = null;
+	getLunchStmt = conn.prepareStatement(getLunchSql);
 	
 %>
 <!DOCTYPE html>
@@ -215,8 +226,13 @@
 				<div style="display: flex;">
 					
 					<form action="/diary/lunch/statsLunch.jsp">
-						<button type="submit" class="btn btn-outline-secondary" style="color: black;">
+						<button type="submit" class="btn btn-outline-secondary" style="color: black; margin-right: 10px;">
 							&#127835;점심 통계
+						</button>
+					</form>
+					<form action="/diary/lunch/lunchAddForm.jsp">
+						<button type="submit" class="btn btn-outline-secondary" style="color: black;">
+							&#127835;점심 투표
 						</button>
 					</form>
 				</div>
@@ -273,7 +289,6 @@
 								<div class="cell sun rounded-1">
 									<div style="text-align: left; margin-left: 5px;">
 										<%=i - startBlank%>
-										<a href="/diary/lunch/lunchOne.jsp?year=<%=titleYear%>&month=<%=titleMonth+1%>&day=<%=i - startBlank%>" style="display: inline; margin-left: 40px;">&#127835;</a>
 									</div>
 									
 				<%
@@ -282,6 +297,21 @@
 										// 날짜에 일기가 존재한다면
 										if(getDiaryListRs.getInt("day") == (i-startBlank)) {
 				%>
+											<%
+												getLunchStmt.setString(1, getDiaryListRs.getString("diaryDate"));
+												getLunchRs = getLunchStmt.executeQuery();
+												if(getLunchRs.next()) {
+											%>
+													<div style="display: flex; margin-left: 5px;">
+														<a href="/diary/lunch/lunchOne.jsp?year=<%=titleYear%>&month=<%=titleMonth+1%>&day=<%=i - startBlank%>">&#127835;점심</a>
+													</div>
+											<%
+												} else{
+											%>
+													<div>&nbsp;</div>
+											<%
+												}
+											%>
 											<div>
 												<a href='/diary/diaryOne.jsp?diaryDate=<%=getDiaryListRs.getString("diaryDate")%>'>
 													<%=getDiaryListRs.getString("feeling") %>
@@ -300,7 +330,6 @@
 								<div class="cell sat rounded-1">
 									<div style="text-align: left; margin-left: 5px;">
 										<%=i - startBlank%>
-										<a href="/diary/lunch/lunchOne.jsp?year=<%=titleYear%>&month=<%=titleMonth+1%>&day=<%=i - startBlank%>" style="display: inline; margin-left: 40px;">&#127835;</a>
 									</div>
 				<%
 									// 현재날짜(i-startBlank)의 일기가 getDiaryListRs 목록에 있는지 비교
@@ -308,6 +337,21 @@
 										// 날짜에 일기가 존재한다면
 										if(getDiaryListRs.getInt("day") == (i-startBlank)) {
 				%>
+											<%
+												getLunchStmt.setString(1, getDiaryListRs.getString("diaryDate"));
+												getLunchRs = getLunchStmt.executeQuery();
+												if(getLunchRs.next()) {
+											%>
+													<div style="display: flex; margin-left: 5px;">
+														<a href="/diary/lunch/lunchOne.jsp?year=<%=titleYear%>&month=<%=titleMonth+1%>&day=<%=i - startBlank%>">&#127835;점심</a>
+													</div>
+											<%
+												} else{
+											%>
+													<div>&nbsp;</div>
+											<%
+												}
+											%>
 											<div>
 												<a href='/diary/diaryOne.jsp?diaryDate=<%=getDiaryListRs.getString("diaryDate")%>'>
 													<%=getDiaryListRs.getString("feeling") %>
@@ -326,7 +370,6 @@
 								<div class="cell rounded-1">
 									<div style="text-align: left; margin-left: 5px;">
 										<%=i - startBlank%>
-										<a href="/diary/lunch/lunchOne.jsp?year=<%=titleYear%>&month=<%=titleMonth+1%>&day=<%=i - startBlank%>" style="display: inline; margin-left: 40px;">&#127835;</a>
 									</div>
 									
 				<%
@@ -334,7 +377,22 @@
 									while(getDiaryListRs.next()) {
 										// 날짜에 일기가 존재한다면
 										if(getDiaryListRs.getInt("day") == (i - startBlank)) {
-				%>
+				%>							
+											<%
+												getLunchStmt.setString(1, getDiaryListRs.getString("diaryDate"));
+												getLunchRs = getLunchStmt.executeQuery();
+												if(getLunchRs.next()) {
+											%>
+													<div style="display: flex; margin-left: 5px;">
+														<a href="/diary/lunch/lunchOne.jsp?year=<%=titleYear%>&month=<%=titleMonth+1%>&day=<%=i - startBlank%>">&#127835;점심</a>
+													</div>
+											<%
+												} else{
+											%>
+													<div>&nbsp;</div>
+											<%
+												}
+											%>
 											<div>
 												<a href='/diary/diaryOne.jsp?diaryDate=<%=getDiaryListRs.getString("diaryDate")%>'>
 													<%=getDiaryListRs.getString("feeling") %>

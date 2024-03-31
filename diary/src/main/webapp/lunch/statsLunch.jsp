@@ -152,10 +152,16 @@
 								</button>
 							</form>
 						</div>
-						<div style="display: flex;">					
+						<div style="display: flex;">
+							
 							<form action="/diary/lunch/statsLunch.jsp">
-								<button type="submit" class="btn btn-outline-secondary" style="color: black;">
+								<button type="submit" class="btn btn-outline-secondary" style="color: black; margin-right: 10px;">
 									&#127835;점심 통계
+								</button>
+							</form>
+							<form action="/diary/lunch/lunchAddForm.jsp">
+								<button type="submit" class="btn btn-outline-secondary" style="color: black;">
+									&#127835;점심 투표
 								</button>
 							</form>
 						</div>
@@ -196,7 +202,7 @@
 														
 							<tr>
 								<%	
-									String[] color = {"#FF0000", "#FF5E00", "#FFE400", "#1DDB16", "#0054FF"};
+									String[] color = {"#8697B3", "#B9C0D0", "#E3DFC2", "#CFC1C0", "#7A7A7A"};
 									int colorIndex = 0;
 									
 									getMenuStatRs.beforeFirst();

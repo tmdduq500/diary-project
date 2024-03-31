@@ -2,43 +2,6 @@
 <%@page import="java.sql.*"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-// 	/* 로그인(인증) 분기 */
-// 	// [DB] diary.login.my_session -> 'OFF'[로그아웃이 되어있을 경우] -> redirect("loginForm.jsp")
-	
-// 	// DB 연결 및 초기화
-// 	Class.forName("org.mariadb.jdbc.Driver");
-// 	Connection conn = null;
-// 	conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3307/diary", "root", "java1234");
-	
-// 	// mySession 값을 가져오는 SQL 쿼리 실행
-// 	String getMySessionSql = "SELECT my_session AS mySession FROM login";
-// 	PreparedStatement getMySessionStmt = null;
-// 	ResultSet getMySessionRs = null;
-// 	getMySessionStmt = conn.prepareStatement(getMySessionSql);
-// 	getMySessionRs = getMySessionStmt.executeQuery();
-	
-// 	// mySession 값
-// 	String mySession = null;
-// 	if(getMySessionRs.next()) {
-// 		mySession = getMySessionRs.getString("mySession");
-// 	}
-// 	System.out.println("diaryListOfMonth - mySession = " + mySession);	// mySession 값 확인
-	
-// 	// mySession이 OFF일 경우(로그아웃 상태)
-// 	if(mySession.equals("OFF")) {
-// 		String errMsg = URLEncoder.encode("잘못된 접근입니다. 로그인 먼저 해주세요.", "UTF-8");
-// 		response.sendRedirect("/diary/login/loginForm.jsp?errMsg=" + errMsg);
-		
-// 		// DB 반납
-// 		getMySessionRs.close();
-// 		getMySessionStmt.close();
-// 		conn.close();
-		
-// 		return ;	// 코드의 진행을 끝 낼때 사용
-// 	}
-%>
-<%
-	
 	//0. 로그인(인증) 분기
 	String loginMember = (String)(session.getAttribute("loginMember"));
 	if(loginMember == null) {
@@ -46,23 +9,37 @@
 		response.sendRedirect("/diary/login/loginForm.jsp?errMsg="+errMsg);
 		return;
 	}
-
+	
 	//DB 연결 및 초기화
 	Class.forName("org.mariadb.jdbc.Driver");
 	Connection conn = null;
 	conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3307/diary", "root", "java1234");
-
-	// 요청 값 
+	
+	// 요청 값 확인
 	String lunchDate = request.getParameter("lunchDate");
-	String menu = request.getParameter("menu");
-
+	String write = request.getParameter("write");
+	
+	// 요청 값 확인
+	System.out.println("lunchAddForm - lunchDate = " + lunchDate);	
+	System.out.println("lunchAddForm - write = " + write);
+	
 	if(lunchDate == null) {
-		response.sendRedirect("/diary/diaryListOfMonth.jsp");
+		lunchDate = "";
+	}
+	// 선택된 날짜에 점심 투표 가능한지
+	if(write == null) {
+		write = "";
 	}
 	
-	// lunchDate 요청 값 확인
-	System.out.println("deleteLunchForm - lunchDate = " + lunchDate);
-		
+	// 점심 투표가 가능한지 불가능한 날짜인지 알려주는 메시지를 출력
+	String writeMsg = "";
+	if(write.equals("Y")) {
+		writeMsg = "투표 가능한 날짜 입니다.";
+	} else if(write.equals("N")){
+		writeMsg = "투표 불가능한 날짜 입니다.";
+	}
+	
+	String errMsg = request.getParameter("errMsg");
 %>
 <!DOCTYPE html>
 <html>
@@ -74,8 +51,7 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Orbit&display=swap" rel="stylesheet">
-	<style>
-	
+	<style>	
 		body {
 			background-image: url('/diary/img/img5.jpg');
 			background-size: 100%;
@@ -93,19 +69,23 @@
 	</style>
 </head>
 <body>
-	<div>
-		
-	</div>
-	
 	<div class="row" style="min-height: 100vh;">
 			<div class="col"></div>
 			
 			<div class="col-6 mt-5 border border-light-subtle shadow p-2 rounded-2" style="background-color: rgba(248, 249, 250, 0.7); height: 450px; width: 800px;">
-	
-	
+			
+				<div>
+					<%
+						if(errMsg != null) {
+					%>
+							<%=errMsg%>
+					<%
+						}
+					%>
+				</div>
+				
 				<div class="row">
 					
-
 					<div class="col-4">
 						<div style="display: flex;">
 							<form action="/diary/diaryListOfMonth.jsp">
@@ -134,14 +114,13 @@
 							</form>
 						</div>
 					</div>
-
 					
 					<div class="col-4">
 						<h1 style="text-align: center; font-size: 55px;">점심 메뉴</h1>
 					</div>
 	
 					<div class="col-4" style="text-align: right;">
-						<form action="/diary/lunch/lunchOne.jsp?lunchDate=<%=lunchDate%>" method="post">
+						<form action="/diary/diaryListOfMonth.jsp">
 							<button type="submit" class="btn-close" aria-label="Close" style="margin: 15px;"></button>
 						</form>
 					</div>
@@ -153,31 +132,44 @@
 				<div>
 				
 					<div style="text-align: center;">
-					 	<form action="/diary/lunch/deleteLunchAction.jsp" method="post" style="margin-top: 50px;">
-					 		<div>
-					 			<%=lunchDate %>일 투표한 음식은 <%=menu %>입니다.
-					 		</div>
-					 		
+						
+						<form action="/diary/lunch/checkLunchAction.jsp">
+							<input type="date" name="lunchDate">
+							<button class="btn btn-outline-secondary" type="submit">투표 가능 확인</button>
+						</form>
+						
+			
+						<form action="/diary/lunch/lunchAddAction.jsp" method="post">
+							<%
+								if(write.equals("Y")) {
+							%>
+									<input type="date" name="lunchDate" value="<%=lunchDate%>" readonly="readonly" style="width: 150px; background-color: rgba(0,0,0,0);">
+									<div><%=writeMsg%></div>
+
+							<%
+								} else {
+							%>
+									<input type="text" name="lunchDate" readonly="readonly" style="width: 150px; background-color: rgba(0,0,0,0);">
+									<div><%=writeMsg%></div>
+							<%
+								}
+							%>
 							<div style="margin-top: 30px;">
-								삭제하시려면 비밀번호를 입력해주세요.
+								메뉴를 투표해주세요
 							</div>
 							
 							<div style="margin-top: 30px;">
-								<input type="hidden" name="lunchDate" value="<%=lunchDate%>">
-								<input type="hidden" name="menu" value="<%=menu%>">
-								pw : 
-								<input type="password" name="pw">
+								<input type="radio" name="menu" value="한식">한식
+								<input type="radio" name="menu" value="중식">중식
+								<input type="radio" name="menu" value="일식">일식
+								<input type="radio" name="menu" value="양식">양식
+								<input type="radio" name="menu" value="기타">기타
 							</div>
 							
 							<div>
-								<button class="btn btn-outline-secondary" type="submit" style="margin-top: 30px;">입력 완료</button>
+								<button class="btn btn-outline-secondary" type="submit" style="margin-top: 30px;">투표 하기</button>
 							</div>
-							
 						</form>
-					</div>
-					
-					<div style="text-align: center;">
-
 
 					</div>
 					
@@ -186,6 +178,5 @@
 			</div>
 			<div class="col"></div>
 		</div>
-	
 </body>
 </html>

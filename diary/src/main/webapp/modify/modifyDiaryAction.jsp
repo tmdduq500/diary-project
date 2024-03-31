@@ -55,6 +55,7 @@
 	// 요청 값 분석
 	String diaryDate = request.getParameter("diaryDate");
 	String title = request.getParameter("title");
+	String feeling = request.getParameter("feeling");
 	String memberPw = request.getParameter("memberPw");
 	String weather = request.getParameter("weather");
 	String content = request.getParameter("content");
@@ -62,6 +63,7 @@
 	// 요청 값 체크
 	System.out.println("modifyDiaryAction - diaryDate = " + diaryDate);	
 	System.out.println("modifyDiaryAction - title = " + title);
+	System.out.println("modifyDiaryAction - feeling = " + feeling);
 	System.out.println("modifyDiaryAction - memberPw = " + memberPw);
 	System.out.println("modifyDiaryAction - weather = " + weather);
 	System.out.println("modifyDiaryAction - content = " + content);
@@ -80,13 +82,14 @@
 		//pw가 맞다면
 		
 		// [DB]diary.diary에 UPDATE 쿼리 실행
-		String modifyDiarySql = "UPDATE diary SET title = ?, weather = ?, content = ?, update_date = NOW() WHERE diary_date = ?";
+		String modifyDiarySql = "UPDATE diary SET title = ?, feeling = ?, weather = ?, content = ?, update_date = NOW() WHERE diary_date = ?";
 		PreparedStatement modifyDiaryStmt = null;
 		modifyDiaryStmt = conn.prepareStatement(modifyDiarySql);
 		modifyDiaryStmt.setString(1, title);
-		modifyDiaryStmt.setString(2, weather);
-		modifyDiaryStmt.setString(3, content);
-		modifyDiaryStmt.setString(4, diaryDate);
+		modifyDiaryStmt.setString(2, feeling);
+		modifyDiaryStmt.setString(3, weather);
+		modifyDiaryStmt.setString(4, content);
+		modifyDiaryStmt.setString(5, diaryDate);
 		
 		int row = modifyDiaryStmt.executeUpdate();
 		System.out.println("modifyDiaryAction - row = " + row);

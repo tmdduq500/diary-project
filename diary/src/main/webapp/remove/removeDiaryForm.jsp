@@ -102,8 +102,8 @@
 				</div>
 
 				<div class="col-3" style="text-align: right;">
-					<form action="/diary/diaryOne.jsp?diaryDate=<%=diaryDate%>">
-						<button type="button" class="btn-close" aria-label="Close" style="margin: 15px;"></button>
+					<form action="/diary/diaryOne.jsp?diaryDate=<%=diaryDate%>" method="post">
+						<button type="submit" class="btn-close" aria-label="Close" style="margin: 15px;"></button>
 					</form>
 				</div>
 				

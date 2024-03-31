@@ -154,25 +154,40 @@
 
 			<div class="row">
 				
-				<div class="col-3" style="display: flex;">
-					<form action="/diary/diaryListOfMonth.jsp">
-						<button type="submit" class="btn btn-outline-secondary" style="color: black; margin-right: 10px;">
-							다이어리
-						</button>
-					</form>
-					
-					<form action="/diary/diaryList.jsp">
-						<button type="submit" class="btn btn-outline-secondary" style="color: black;">
-							일기 목록
-						</button>
-					</form>
+				<div class="col-4">
+					<div style="display: flex;">
+						<form action="/diary/diaryListOfMonth.jsp">
+							<button type="submit" class="btn btn-outline-secondary" style="color: black; margin-right: 10px; padding: 5 10px; width: 115px;">
+								&#128214;다이어리
+							</button>
+						</form>
+						
+						<form action="/diary/diaryList.jsp">
+							<button type="submit" class="btn btn-outline-secondary" style="color: black;">
+								&#128214;일기 목록
+							</button>
+						</form>
+					</div>
+					<div style="display: flex;">
+						
+						<form action="/diary/lunch/statsLunch.jsp">
+							<button type="submit" class="btn btn-outline-secondary" style="color: black; margin-right: 10px;">
+								&#127835;점심 통계
+							</button>
+						</form>
+						<form action="/diary/lunch/lunchAddForm.jsp">
+							<button type="submit" class="btn btn-outline-secondary" style="color: black;">
+								&#127835;점심 투표
+							</button>
+						</form>
+					</div>
 				</div>
 				
-				<div class="col-6">
-					<h1 style="text-align: center; font-size: 60px;">일기 수정</h1>
+				<div class="col-4">
+					<h1 style="text-align: center; font-size: 55px;">일기 수정</h1>
 				</div>
 				
-				<div class="col-3" style="text-align: right;">
+				<div class="col-4" style="text-align: right;">
 					<form action="/diary/login/logoutAction.jsp" method="post">
 						<button class="btn btn-outline-secondary" type="submit">로그아웃</button>
 					</form>
@@ -253,10 +268,9 @@
 									<th>기분</th>
 									<td>
 										<div>
-											<%=getDiaryRs.getString("feeling").equals("&#128528;") %>
 											<%
 												System.out.println("feeling = " + getDiaryRs.getString("feeling"));
-												if(getDiaryRs.getString("feeling").equals("&#128516;")) {
+												if(getDiaryRs.getString("feeling").equals("&#128516")) {
 											%>
 													<label for="&#128516;">
 														<input type="radio" name="feeling" value="&#128516;" id="&#128516;" checked="checked">&#128516;
@@ -274,7 +288,7 @@
 														<input type="radio" name="feeling" value="&#128127;" id="&#128127;">&#128127;
 													</label>
 											<% 
-												} else if(getDiaryRs.getString("feeling").equals("&#128528;")) {
+												} else if(getDiaryRs.getString("feeling").equals("&#128528")) {
 											%>
 													<label for="&#128516;">
 														<input type="radio" name="feeling" value="&#128516;" id="&#128516;">&#128516;
@@ -292,7 +306,7 @@
 														<input type="radio" name="feeling" value="&#128127;" id="&#128127;">&#128127;
 													</label>
 											<%
-												} else if(getDiaryRs.getString("feeling").equals("&#128533;")) {
+												} else if(getDiaryRs.getString("feeling").equals("&#128533")) {
 											%>
 													<label for="&#128516;">
 														<input type="radio" name="feeling" value="&#128516;" id="&#128516;">&#128516;
@@ -310,7 +324,7 @@
 														<input type="radio" name="feeling" value="&#128127;" id="&#128127;">&#128127;
 													</label>
 											<%
-												} else if(getDiaryRs.getString("feeling").equals("&#128557;")) {
+												} else if(getDiaryRs.getString("feeling").equals("&#128557")) {
 											%>
 													<label for="&#128516;">
 														<input type="radio" name="feeling" value="&#128516;" id="&#128516;">&#128516;

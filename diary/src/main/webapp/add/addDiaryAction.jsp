@@ -57,10 +57,11 @@
 	String diaryDate = request.getParameter("diaryDate");
 	String title = request.getParameter("title");
 	String weather = request.getParameter("weather");
+	String feeling = request.getParameter("feeling");
 	String content = request.getParameter("content");
 	
 	// 아무것도 입력하지않고 작성완료를 눌렀을 경우
-	if(diaryDate.equals("") && title.equals("") && content.equals("")) {
+	if(diaryDate.equals("") && title.equals("") && content.equals("") && feeling.equals("")) {
 		String errMsg = URLEncoder.encode("일기의 형식에 맞게 작성해주세요", "UTF-8");
 		response.sendRedirect("/diary/add/addDiaryForm.jsp?errMsg=" + errMsg);
 		
@@ -71,16 +72,18 @@
 	System.out.println("addDiaryAction - title = " + title);	// title 값 확인
 	System.out.println("addDiaryAction - weather = " + weather);	// weather 값 확인
 	System.out.println("addDiaryAction - content = " + content);	// content 값 확인
+	System.out.println("addDiaryAction - feeling = " + feeling);	// feeling 값 확인
 	
 	// [DB] diary.diary에 추가하는 쿼리
-	String addDiarySql = "INSERT INTO diary(diary_date, title, weather, content, update_date, create_date) VALUES (?, ?, ?, ?, NOW(), NOW())";
+	String addDiarySql = "INSERT INTO diary(diary_date, feeling, title, weather, content, update_date, create_date) VALUES (?, ?, ?, ?, ?, NOW(), NOW())";
 	PreparedStatement addDiaryStmt = null;
 	
 	addDiaryStmt = conn.prepareStatement(addDiarySql);
 	addDiaryStmt.setString(1, diaryDate);	// ? 값 교체
-	addDiaryStmt.setString(2, title);	// ? 값 교체
-	addDiaryStmt.setString(3, weather);	// ? 값 교체
-	addDiaryStmt.setString(4, content);	// ? 값 교체
+	addDiaryStmt.setString(2, feeling);	// ? 값 교체
+	addDiaryStmt.setString(3, title);	// ? 값 교체
+	addDiaryStmt.setString(4, weather);	// ? 값 교체
+	addDiaryStmt.setString(5, content);	// ? 값 교체
 	System.out.println("addDiaryAction - addDiaryStmt = " + addDiaryStmt);
 	
 	int row = addDiaryStmt.executeUpdate();

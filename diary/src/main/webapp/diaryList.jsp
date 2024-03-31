@@ -181,15 +181,7 @@
 		  background-color: rgba(92, 138, 153, 0.5);
 		  color: #000000;
 		}
-		
-		/* 테이블 올렸을 때 */
-		tbody tr:hover {
-		  background-color: #d3d3d3;
-		  opacity: 0.9;
-		  cursor: pointer;
-		  color: 
-		}
-				
+						
 	</style>
 </head>
 <body>
@@ -200,27 +192,33 @@
 		<div class="col-6 mt-5 border border-light-subtle shadow p-2 rounded-2" style="background-color: rgba(248, 249, 250, 0.7); height: 800px;">
 			<div class="row">
 				<div class="col-4">
-					<div style="display: flex;">
-						<form action="/diary/diaryListOfMonth.jsp">
-							<button type="submit" class="btn btn-outline-secondary" style="color: black; margin-right: 10px; padding: 5 10px; width: 115px;">
-								&#128214;다이어리
-							</button>
-						</form>
-						
-						<form action="/diary/diaryList.jsp">
-							<button type="submit" class="btn btn-outline-secondary" style="color: black;">
-								&#128214;일기 목록
-							</button>
-						</form>
-					</div>
-					<div style="display: flex;">					
-						<form action="/diary/lunch/statsLunch.jsp">
-							<button type="submit" class="btn btn-outline-secondary" style="color: black;">
-								&#127835;점심 통계
-							</button>
-						</form>
-					</div>
+				<div style="display: flex;">
+					<form action="/diary/diaryListOfMonth.jsp">
+						<button type="submit" class="btn btn-outline-secondary" style="color: black; margin-right: 10px; padding: 5 10px; width: 115px;">
+							&#128214;다이어리
+						</button>
+					</form>
+					
+					<form action="/diary/diaryList.jsp">
+						<button type="submit" class="btn btn-outline-secondary" style="color: black;">
+							&#128214;일기 목록
+						</button>
+					</form>
 				</div>
+				<div style="display: flex;">
+					
+					<form action="/diary/lunch/statsLunch.jsp">
+						<button type="submit" class="btn btn-outline-secondary" style="color: black; margin-right: 10px;">
+							&#127835;점심 통계
+						</button>
+					</form>
+					<form action="/diary/lunch/lunchAddForm.jsp">
+						<button type="submit" class="btn btn-outline-secondary" style="color: black;">
+							&#127835;점심 투표
+						</button>
+					</form>
+				</div>
+			</div>
 
 				<div class="col-4">
 					<h1 style="text-align: center; font-size: 60px;">일기 목록</h1>
@@ -237,7 +235,7 @@
 			
 			<table style="background-color: rgba(255, 255, 255, 0);">
 				<tr>
-					<th>날짜</th>
+					<th style="width: 50%;">날짜</th>
 					<th>제목</th>
 				</tr>
 				<%
@@ -264,10 +262,53 @@
 			</div>
 			
 			<div>
-				<div style="text-align: center;">
-					<a href="">이전</a>
-					<a href="">다음</a>
-				</div>
+				<!-- 페이징 버튼 -->
+					<nav aria-label="Page navigation example">
+						<ul class="pagination pagination-sm" style="margin-left: 300px;">
+						<%
+							if(currentPage > 1) {
+						%>
+								<li class="page-item">
+									<a class ="page-link" href="/diary/diaryList.jsp?currentPage=1" style="color: #003F4B;">처음페이지</a>
+								</li>
+								<li class="page-item">
+									<a class ="page-link" href="/diary/diaryList.jsp?currentPage=<%=currentPage-1%>" style="color: #003F4B;">이전페이지</a>
+								</li>
+						<%		
+							} else {
+						%>
+								<li class="page-item disabled">
+									<a class ="page-link" href="/diary/diaryList.jsp?currentPage=1">처음페이지</a>
+								</li>
+								<li class="page-item disabled">
+									<a class ="page-link" href="/diary/diaryList.jsp?currentPage=<%=currentPage-1%>">이전페이지</a>
+								</li>
+						<%		
+							}
+						
+							if(currentPage < lastPage) {
+						%>
+								<li class="page-item">
+									<a class ="page-link" href="/diary/diaryList.jsp?currentPage=<%=currentPage+1%>" style="color: #003F4B;">다음페이지</a>
+								</li>
+								<li class="page-item">
+									<a class ="page-link" href="/diary/diaryList.jsp?currentPage=<%=lastPage%>" style="color: #003F4B;">마지막페이지</a>
+								</li>
+						<%		
+							} else {
+						%>
+								<li class="page-item disabled">
+									<a class ="page-link" href="/diary/diaryList.jsp?currentPage=<%=currentPage+1%>" style="color: #003F4B;">다음페이지</a>
+								</li>
+								<li class="page-item disabled">
+									<a class ="page-link" href="/diary/diaryList.jsp?currentPage=<%=lastPage%>" style="color: #003F4B;">마지막페이지</a>
+								</li>
+						<%
+							}
+						%>
+						</ul>
+					</nav>
+				
 		
 				<div style="text-align: center;  margin-top: 10px;">
 					<form action="/diary/diaryList.jsp" method="get">
