@@ -15,7 +15,7 @@
 	Connection conn = null;
 	conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3307/diary", "root", "java1234");
 
-	// diary테이블에 날짜가 이미 존재하는지 확인하기 -> 존재하지 않아야 글쓰기 가능
+	// lunch 테이블에 날짜가 이미 존재하는지 확인하기 -> 존재하지 않아야 투표 가능
 	// 요청 값 분석
 	String checkLunchDate = request.getParameter("lunchDate");
 	if(checkLunchDate == null) {
@@ -30,14 +30,14 @@
 	ResultSet checkLunchRs = checkLunchStmt.executeQuery();
 		
 	if(checkLunchRs.next()) {
-		// 해당 날짜는 일기 작성 불가능(이미 해당 날짜의 일기 존재함)
+		// 해당 날짜는 투표 불가능(이미 해당 날짜의 점심 투표 존재함)
 		response.sendRedirect("/diary/lunch/lunchAddForm.jsp?lunchDate=" + checkLunchDate + "&write=N");
 	} else {
-		// 아무 날짜도 선택하지 않고 날짜 가능 확인 버튼을 눌렀을 때 작성 불가능
+		// 아무 날짜도 선택하지 않고 투표 가능 확인 버튼을 눌렀을 때 투표 불가능
 		if(checkLunchDate.equals("")) {
 			response.sendRedirect("/diary/lunch/lunchAddForm.jsp?lunchDate=" + checkLunchDate + "&write=N");
 		} else {
-			// 해당 날짜는 일기 기록 가능
+			// 해당 날짜는 점심 투표 가능
 			response.sendRedirect("/diary/lunch/lunchAddForm.jsp?lunchDate=" + checkLunchDate + "&write=Y");
 		}
 	}
